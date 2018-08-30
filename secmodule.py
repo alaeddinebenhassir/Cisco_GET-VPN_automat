@@ -10,13 +10,11 @@ def fetch(file):
     return a
 
 def phase_1(tn ,sites):
-
     tn.write(b"end \n")
     tn.write(b"conf t \n")
 
     prio = input("Chose Priority of protection suite <1-10000> :")
     tn.write(b"crypto isakmp policy "+prio.encode('ascii') + b"\n")    
-    
     tn.write(b"authentication pre-share\n")
     pre_sh = input("pre-share key :")
     print("[+] authentication pre-share")
