@@ -162,3 +162,4 @@ def redendancy(server1 ,server2 ,group):
         hub_tn.write(b"exit \n")
 
 """
+#checked 
