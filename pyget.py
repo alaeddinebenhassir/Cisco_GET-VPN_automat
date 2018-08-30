@@ -5,23 +5,15 @@ sites = fetch("fetch.txt")
 KEYS = ['24.0.0.1']
 
 transform_set =''
-
 ipsec_profile =''
 
 TN = login(SERVER[0])
-
 phase_1(TN ,sites)
-
 lable = rsa_labl(TN)
-
 transform_set = trans(TN ,transform_set)
-
 ipsec_profile = ipsecprofile(TN ,transform_set ,ipsec_profile)
-
 acl = accessListe(TN)
-
 groupe = GETVPNgroup(TN , " 11111 " ,SERVER[0] ,ipsec_profile ,acl ,lable ,KEYS)
-
 cryptoMap =Cmap(TN ,groupe)
 
 TN.write(b"end" + b"\n")
