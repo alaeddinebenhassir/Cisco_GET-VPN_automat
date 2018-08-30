@@ -35,9 +35,6 @@ def phase_1(tn ,sites):
 def trans(tn):
     tn.write(b"end \n")
     tn.write(b"conf t \n")
-#    if trans_seted:
-    #tn.write(b"crypto ipsec transform-set " + trans_seted.encode('ascii') + b" esp-aes 128 esp-sha-hmac \n")
-    #else:
     name = input("transform set name :" )   
     tn.write(b"crypto ipsec transform-set " + name.encode('ascii') + b" esp-aes 128 esp-sha-hmac \n")
     return name 
@@ -45,17 +42,10 @@ def trans(tn):
 def ipsecprofile(tn ,TS):
     tn.write(b"end \n")
     tn.write(b"conf t \n")
-    #if profile_seted :
-      #  tn.write(b"crypto ipsec profile "+profile_seted.encode('ascii')+ b"\n")
-      #  tn.write(b"set transform-set " + TS.encode('ascii')+b"\n")
-    #else:
     name = input("ipsec Profile name :")
     tn.write(b"crypto ipsec profile "+ name.encode('ascii')+ b"\n")
     tn.write(b"set transform-set " + TS.encode('ascii')+b"\n")
     return name 
-
-    
-    
 
 def accessListe(tn):
     tn.write(b"end \n")
@@ -84,25 +74,6 @@ def rsa_labl(tn):
     name = input("name the labl : ")
     tn.write(b"crypto key generate rsa modulus 2048 label "+ name.encode('ascii')+ b" exportable\n")
     return name 
-   
-
-
-"""def exportkey(tn ,label):
-    tn.write(b"end \n")
-    tn.write(b"conf t \n")
-
-    tn.write(b"crypto key export rsa " + label.encode('ascii') + b" pem terminal 3des DEFAULT \n")
-    tn.write(b"end \n")
-    tn.write(b"exit \n")
-
-def importkey(tn ,label):
-    tn.write(b"end \n")
-    tn.write(b"conf t \n")
-
-    tn.write(b"crypto key import rsa " + label.encode('ascii') + b"  terminal  DEFAULT \n")
-    tn.write(b"end \n")
-    tn.write(b"exit \n")
-   """ 
 
 def GETVPNgroup(tn ,idnum ,HOST ,profile ,acl ,lable , KS):
     tn.write(b"end \n")
@@ -145,20 +116,4 @@ def CmapGM(tn ,groupe ,name):
     tn.write(b"set group "+groupe.encode('ascii')+ b"\n")
     
     return name
-"""
-def redendancy(server1 ,server2 ,group):
-    hubs = [server1 , server2]
-    #for i in range(2) :
-    hub_tn=login(hubs[i])
-    hub_tn.write(b"end \n")
-        hub_tn.write(b"conf t \n")
-        hub_tn.write(b"crypto gdoi group " + group.encode('ascii') +b" \n")
-        hub_tn.write(b"server local  \n")
-        #hub_tn.write(b"redundancy  \n")
-        #priority = input("server priority :")
-        #hub_tn.write(b"local priority "+ priority.encode('ascii')+ b"\n")
-        hub_tn.write(b"peer address ipv4 " + hubs[int(not i ) ].encode('ascii') +b" \n")
-        hub_tn.write(b"end \n")
-        hub_tn.write(b"exit \n")
 
-"""
