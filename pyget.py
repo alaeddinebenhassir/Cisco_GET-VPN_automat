@@ -44,3 +44,4 @@ for site in sites :
     GM.write(b"exit" + b"\n")
     x = GM.read_all()
     print(x.decode('utf-8')) 
+    #commited frome github
