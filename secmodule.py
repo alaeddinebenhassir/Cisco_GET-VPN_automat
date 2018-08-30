@@ -30,8 +30,7 @@ def phase_1(tn ,sites):
     for site in sites:
         tn.write(b"crypto isakmp key "+ pre_sh.encode('ascii')+ b" address "+ site.encode('ascii')+b"\n")
 
-        
-
+       
 def trans(tn):
     tn.write(b"end \n")
     tn.write(b"conf t \n")
