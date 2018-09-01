@@ -68,7 +68,7 @@ def accessListe(tn):
 
 def login(HOST):
     
-    print("Loging ro HOST  >> ",HOST)
+    print("Loging to HOST  >> ",HOST)
     tel = telnetlib.Telnet(HOST)
     user = input(" [ HOST 1 ]>> Enter your telnet user name :")
     password= getpass.getpass()
@@ -190,6 +190,5 @@ def importkeys(host1,host2):
     if state == -1 :
         print("importing field !!!!")
     else:
-        return sho[state:]
-print(importkeys("10.1.0.100","10.1.0.200"))
+        return sho[state:(state+len("% Key pair import succeeded.\n [OK]"))]
 

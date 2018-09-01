@@ -1,19 +1,15 @@
 from secmodule import *
 
-SERVER = ['10.1.0.100']
 sites = fetch("fetch.txt")
 KEYS = ['24.0.0.1']
-
 COOP =['23.0.0.1']
-
-COOP_ADD =['23.0.0.1']
   
 transform_set =''
 
 ipsec_profile =''
 
 #configuring key server 
-TN = login(SERVER[0])
+TN = login(KEYS[0])
 
 phase_1(TN ,sites)
 
@@ -25,7 +21,7 @@ ipsec_profile = ipsecprofile(TN ,transform_set ,ipsec_profile)
 
 acl = accessListe(TN)
 
-groupe = GETVPNgroup(TN , " 11111 " ,SERVER[0] ,ipsec_profile ,acl ,lable ,KEYS)
+groupe = GETVPNgroup(TN , " 11111 " ,KEYS[0] ,ipsec_profile ,acl ,lable ,KEYS)
 
 cryptoMap =Cmap(TN ,groupe)
 
@@ -36,12 +32,7 @@ print(a.decode('utf-8'))
 
 #configuring coop server 
 
-
-TN = login(SERVER[0])
-
-exportkey(TN ,lable)
-CP = login(COOP[0])
-importkey(CP , lable)
+importkeys(KEYS[0] ,COOP[0])
 CP = login(COOP[0])
 phase_1(CP ,KEYS)
 
@@ -50,12 +41,12 @@ ipsecprofile(CP , transform_set , ipsec_profile)
 
 accessListe(CP)
 
-GETVPNgroup(CP ," 11111 " ,COOP[0] ,ipsec_profile ,acl ,lable ,COOP_ADD[0])
+GETVPNgroup(CP ," 11111 " ,COOP[0] ,ipsec_profile ,acl ,lable ,COOP[0])
 
 Cmap(CP ,groupe) 
 
 #ADDING REDENDANCY 
-redendancy(SERVER[0] ,COOP[0] , groupe)
+redendancy(KEYS[0] ,COOP[0] , groupe)
 
 #Configuring GMs
 
