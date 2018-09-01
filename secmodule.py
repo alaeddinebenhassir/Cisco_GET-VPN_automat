@@ -141,9 +141,15 @@ def redendancy(server1 ,server2 ,group):
         hub_tn.write(b"redundancy  \n")
         priority = input("server priority :")
         hub_tn.write(b"local priority "+ priority.encode('ascii')+ b"\n")
-        hub_tn.write(b"peer address ipv4 " + hubs[not i].encode('ascii') +b" \n")
+        if i == 0 :
+            hub_tn.write(b"peer address ipv4 " + hubs[i+1].encode('ascii') +b" \n")
+        else:
+            hub_tn.write(b"peer address ipv4 " + hubs[0].encode('ascii') +b" \n")
         hub_tn.write(b"end \n")
         hub_tn.write(b"exit \n")
+        sho = hub_tn.read_all()
+        sho = sho.decode('utf-8')
+        print(sho)
 
 def importkeys(host1,host2, label):
     ks = login(host1)
