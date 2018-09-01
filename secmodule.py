@@ -160,4 +160,36 @@ def redendancy(server1 ,server2 ,group):
         hub_tn.write(b"end \n")
         hub_tn.write(b"exit \n")
 
+def importkeys(host1,host2):
+    ks = login(host1)
+    ks.write(b"conf t \n")
+    ks.write(b"crypto key export rsa  ll pem terminal 3des password\n")
+    ks.write(b"end \n")
+    ks.write(b"exit \n")
+    keys = ks.read_all()
+    keys = keys.decode('utf-8')
+    begin_pub = keys.find("-----BEGIN PUBLIC KEY-----")
+    end_pub = keys.find("-----END PUBLIC KEY-----")+ len("-----END PUBLIC KEY-----")
+    begin_pr = keys.find("-----BEGIN RSA PRIVATE KEY-----")
+    end_pr = keys.find("-----END RSA PRIVATE KEY-----") + len("-----END RSA PRIVATE KEY-----")
+    
+    cp = login(host2)
+    print (" [-] importing ...")
+    cp.write(b"conf t \n")
+    cp.write(b"crypto key import rsa ll pem terminal password\n")
+    cp.write(keys[begin_pub:end_pub].encode('ascii') + b"\n")
+    cp.write(b"\n")
+    cp.write(keys[begin_pr:end_pr].encode('ascii') + b"\n")
+    cp.write(b"quit\n")
+    cp.write(b"end \n")
+    cp.write(b"exit \n")
+    sho = cp.read_all()
+    sho = sho.decode('utf-8')
+
+    state = sho.find("% Key pair import succeeded.")
+    if state == -1 :
+        print("importing field !!!!")
+    else:
+        return sho[state:]
+print(importkeys("10.1.0.100","10.1.0.200"))
 
