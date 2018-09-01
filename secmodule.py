@@ -9,7 +9,7 @@ def fetch(file):
         a.append(site)
     return a
 
-def phase_1(tn ,sites):
+def phase_1(tn ,sites,*args, **kwargs):
 
     tn.write(b"end \n")
     tn.write(b"conf t \n")
@@ -29,7 +29,8 @@ def phase_1(tn ,sites):
     
     for site in sites:
         tn.write(b"crypto isakmp key "+ pre_sh.encode('ascii')+ b" address "+ site.encode('ascii')+b"\n")
-
+    for coop in args:
+        tn.write(b"crypto isakmp key "+ pre_sh.encode('ascii')+ b" address "+ coop.encode('ascii')+b"\n")
         
 
 def trans(tn ,trans_seted):
@@ -40,7 +41,7 @@ def trans(tn ,trans_seted):
     else:
         name = input("transform set name :" )   
         tn.write(b"crypto ipsec transform-set " + name.encode('ascii') + b" esp-aes 128 esp-sha-hmac \n")
-    return name 
+        return name 
 
 def ipsecprofile(tn ,TS ,profile_seted):
     tn.write(b"end \n")
@@ -52,7 +53,7 @@ def ipsecprofile(tn ,TS ,profile_seted):
         name = input("ipsec Profile name :")
         tn.write(b"crypto ipsec profile "+ name.encode('ascii')+ b"\n")
         tn.write(b"set transform-set " + TS.encode('ascii')+b"\n")
-    return name 
+        return name 
 
     
     
@@ -134,19 +135,20 @@ def redendancy(server1 ,server2 ,group):
         hub_tn=login(hubs[i])
         hub_tn.write(b"end \n")
         hub_tn.write(b"conf t \n")
+        hub_tn.write(b"crypto isakmp keepalive 10 periodic\n")
         hub_tn.write(b"crypto gdoi group " + group.encode('ascii') +b" \n")
         hub_tn.write(b"server local  \n")
         hub_tn.write(b"redundancy  \n")
         priority = input("server priority :")
         hub_tn.write(b"local priority "+ priority.encode('ascii')+ b"\n")
-        hub_tn.write(b"peer address ipv4 " + hubs[int(not i ) ].encode('ascii') +b" \n")
+        hub_tn.write(b"peer address ipv4 " + hubs[not i].encode('ascii') +b" \n")
         hub_tn.write(b"end \n")
         hub_tn.write(b"exit \n")
 
-def importkeys(host1,host2):
+def importkeys(host1,host2, label):
     ks = login(host1)
     ks.write(b"conf t \n")
-    ks.write(b"crypto key export rsa  ll pem terminal 3des password\n")
+    ks.write(b"crypto key export rsa " + label.encode('ascii')  + b" pem terminal 3des password\n")
     ks.write(b"end \n")
     ks.write(b"exit \n")
     keys = ks.read_all()
@@ -159,7 +161,7 @@ def importkeys(host1,host2):
     cp = login(host2)
     print (" [-] importing ...")
     cp.write(b"conf t \n")
-    cp.write(b"crypto key import rsa ll pem terminal password\n")
+    cp.write(b"crypto key import rsa " + label.encode('ascii')  + b" pem terminal password\n")
     cp.write(keys[begin_pub:end_pub].encode('ascii') + b"\n")
     cp.write(b"\n")
     cp.write(keys[begin_pr:end_pr].encode('ascii') + b"\n")
@@ -168,7 +170,7 @@ def importkeys(host1,host2):
     cp.write(b"exit \n")
     sho = cp.read_all()
     sho = sho.decode('utf-8')
-
+    print(sho)
     state = sho.find("% Key pair import succeeded.")
     if state == -1 :
         print("importing field !!!!")

@@ -2,7 +2,7 @@ from secmodule import *
 
 sites = fetch("fetch.txt")
 KEYS = ['24.0.0.1']
-COOP =['23.0.0.1']
+COOP = ['23.0.0.1']
   
 transform_set =''
 
@@ -11,7 +11,7 @@ ipsec_profile =''
 #configuring key server 
 TN = login(KEYS[0])
 
-phase_1(TN ,sites)
+phase_1(TN ,sites ,COOP[0])
 
 lable = rsa_labl(TN)
 
@@ -32,21 +32,29 @@ print(a.decode('utf-8'))
 
 #configuring coop server 
 
-importkeys(KEYS[0] ,COOP[0])
+importkeys(KEYS[0] ,COOP[0] , lable)
+
 CP = login(COOP[0])
-phase_1(CP ,KEYS)
+
+phase_1(CP ,KEYS )
 
 trans(CP ,transform_set)
+
 ipsecprofile(CP , transform_set , ipsec_profile)
 
 accessListe(CP)
 
-GETVPNgroup(CP ," 11111 " ,COOP[0] ,ipsec_profile ,acl ,lable ,COOP[0])
+GETVPNgroup(CP ," 11111 " ,COOP[0] ,ipsec_profile ,acl ,lable ,COOP)
 
 Cmap(CP ,groupe) 
 
 #ADDING REDENDANCY 
 redendancy(KEYS[0] ,COOP[0] , groupe)
+CP.write(b"end\n")
+CP.write(b"exit\n")
+sh = CP.read_all()
+sh = sh.decode('utf-8')
+print(sh)
 
 #Configuring GMs
 
