@@ -86,24 +86,6 @@ def rsa_labl(tn):
     return name 
    
 
-
-def exportkey(tn ,label):
-    tn.write(b"end \n")
-    tn.write(b"conf t \n")
-
-    tn.write(b"crypto key export rsa " + label.encode('ascii') + b" pem terminal 3des DEFAULT \n")
-    tn.write(b"end \n")
-    tn.write(b"exit \n")
-
-def importkey(tn ,label):
-    tn.write(b"end \n")
-    tn.write(b"conf t \n")
-
-    tn.write(b"crypto key import rsa " + label.encode('ascii') + b"  terminal  DEFAULT \n")
-    tn.write(b"end \n")
-    tn.write(b"exit \n")
-   
-
 def GETVPNgroup(tn ,idnum ,HOST ,profile ,acl ,lable , KS):
     tn.write(b"end \n")
     tn.write(b"conf t \n")
@@ -145,6 +127,7 @@ def CmapGM(tn ,groupe ,name):
     tn.write(b"set group "+groupe.encode('ascii')+ b"\n")
     
     return name
+
 def redendancy(server1 ,server2 ,group):
     hubs = [server1 , server2]
     for i in range(2) :
